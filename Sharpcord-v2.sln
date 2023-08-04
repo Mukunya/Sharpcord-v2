@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpcordBotLibrary", "Shar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpcordHost", "SharpcordHost\SharpcordHost.csproj", "{76664758-E065-495E-8754-8F42AE7CFFAA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bots", "Bots", "{5EDC5616-E3F5-400C-B3B8-C9859ED8136A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleBot", "ExampleBot\ExampleBot.csproj", "{166C2BD2-39A2-4881-9945-F1F7B701CB2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +25,16 @@ Global
 		{76664758-E065-495E-8754-8F42AE7CFFAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76664758-E065-495E-8754-8F42AE7CFFAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76664758-E065-495E-8754-8F42AE7CFFAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{166C2BD2-39A2-4881-9945-F1F7B701CB2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{166C2BD2-39A2-4881-9945-F1F7B701CB2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{166C2BD2-39A2-4881-9945-F1F7B701CB2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{166C2BD2-39A2-4881-9945-F1F7B701CB2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{166C2BD2-39A2-4881-9945-F1F7B701CB2E} = {5EDC5616-E3F5-400C-B3B8-C9859ED8136A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78CDD4FD-B064-4608-B269-391DA72C2185}

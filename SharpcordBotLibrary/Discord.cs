@@ -11,7 +11,7 @@ namespace Sharpcord_bot_library
 {
     public class Discord
     {
-        public const string DC_API = "https://discord.com/api";
+        public const string DC_API = "https://discord.com/api/v10/";
     }
     public abstract class Bot
     {

@@ -50,31 +50,31 @@ namespace Sharpcord_bot_library
         public abstract Task RespondAsync(InteractionResponse resp);
         public async Task<Message> GetOriginalResponseAsync()
         {
-            return JsonConvert.DeserializeObject<Message>(await client.GetStringAsync($"/webhooks/{application_id}/{token}/messages/@original"));
+            return JsonConvert.DeserializeObject<Message>(await client.GetStringAsync($"webhooks/{application_id}/{token}/messages/@original"));
         }
         public async Task<Message> EditOriginalResponseAsync(MessageResponse message)
         {
-             return JsonConvert.DeserializeObject<Message>(await (await client.PatchAsync($"/webhooks/{application_id}/{token}/messages/@original", new StringContent(JsonConvert.SerializeObject(message, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })).AsJson())).EnsureSuccessStatusCode().Content.ReadAsStringAsync());
+             return JsonConvert.DeserializeObject<Message>(await (await client.PatchAsync($"webhooks/{application_id}/{token}/messages/@original", new StringContent(JsonConvert.SerializeObject(message, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })).AsJson())).EnsureSuccessStatusCode().Content.ReadAsStringAsync());
         }
         public async Task DeleteOriginalResponseAsync()
         {
-            await client.DeleteAsync($"/webhooks/{application_id}/{token}/messages/@original");
+            await client.DeleteAsync($"webhooks/{application_id}/{token}/messages/@original");
         }
         public async Task<Message> CreateFollowupMessageAsync(MessageResponse message)
         {
-            return JsonConvert.DeserializeObject<Message>(await (await client.PostAsync($"/webhooks/{application_id}/{token}", new StringContent(JsonConvert.SerializeObject(message, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })).AsJson())).EnsureSuccessStatusCode().Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<Message>(await (await client.PostAsync($"webhooks/{application_id}/{token}", new StringContent(JsonConvert.SerializeObject(message, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })).AsJson())).EnsureSuccessStatusCode().Content.ReadAsStringAsync());
         }
         public async Task<Message> GetFollowupMessageAsync(ulong id)
         {
-            return JsonConvert.DeserializeObject<Message>(await client.GetStringAsync($"/webhooks/{application_id}/{token}/messages/{id}"));
+            return JsonConvert.DeserializeObject<Message>(await client.GetStringAsync($"webhooks/{application_id}/{token}/messages/{id}"));
         }
         public async Task DeleteFollowupMessageAsync(ulong id)
         {
-            await client.DeleteAsync($"/webhooks/{application_id}/{token}/messages/{id}");
+            await client.DeleteAsync($"webhooks/{application_id}/{token}/messages/{id}");
         }
         public async Task<Message> EditFollowupMessageAsync(ulong id,MessageResponse message)
         {
-            return JsonConvert.DeserializeObject<Message>(await (await client.PatchAsync($"/webhooks/{application_id}/{token}/messages/{id}", new StringContent(JsonConvert.SerializeObject(message, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })).AsJson())).EnsureSuccessStatusCode().Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<Message>(await (await client.PatchAsync($"webhooks/{application_id}/{token}/messages/{id}", new StringContent(JsonConvert.SerializeObject(message, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })).AsJson())).EnsureSuccessStatusCode().Content.ReadAsStringAsync());
         }
         public InteractionObject Data { get; internal set; }
     }

@@ -97,6 +97,7 @@ namespace Sharpcord_bot_library
         {
             try
             {
+                //Logger.Debug(this, e.Message);
                 //Console.WriteLine(e.Message);
                 JObject msg = JObject.Parse(e.Message);
                 if (msg.ContainsKey("s"))
