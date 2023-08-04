@@ -98,7 +98,7 @@ namespace Sharpcord_bot_library
     }
 
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Struct|AttributeTargets.Interface, Inherited = false, AllowMultiple = false)]
-    sealed class LogContextAttribute : Attribute
+    public sealed class LogContextAttribute : Attribute
     {
         readonly string context;
 
