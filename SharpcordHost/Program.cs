@@ -8,6 +8,10 @@ List<Bot> BotInstances = new List<Bot>();
 Logger.Init(args.Contains("-D"));
 AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 Logger.Info(null, "Starting, searching for bots");
+if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "/modules"))
+{
+    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "/modules");
+}
 string[] botdlls = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "/modules");
 foreach (string botdll in botdlls)
 {
@@ -39,6 +43,7 @@ foreach (var item in LoadedBots)
         Logger.Error(null, e);
     }
 }
+Logger.Info(null, "All bots started");
 new ManualResetEvent(false).WaitOne();
 
 void CurrentDomain_ProcessExit(object? sender, EventArgs e)
