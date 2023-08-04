@@ -13,6 +13,7 @@ namespace Sharpcord_bot_library
         {
             token = interaction.token;
             application_id = interaction.application_id;
+            Data = interaction;
         }
         internal InteractionResponse initial;
         private ManualResetEvent respond = new ManualResetEvent(false);

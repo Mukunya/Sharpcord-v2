@@ -76,5 +76,6 @@ namespace Sharpcord_bot_library
         {
             return JsonConvert.DeserializeObject<Message>(await (await client.PatchAsync($"/webhooks/{application_id}/{token}/messages/{id}", new StringContent(JsonConvert.SerializeObject(message, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })).AsJson())).EnsureSuccessStatusCode().Content.ReadAsStringAsync());
         }
+        public InteractionObject Data { get; internal set; }
     }
 }

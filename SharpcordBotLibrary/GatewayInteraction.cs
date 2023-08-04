@@ -16,6 +16,7 @@ namespace Sharpcord_bot_library
             token = interaction.token;
             application_id = interaction.application_id;
             id = interaction.id;
+            Data = interaction;
         }
         public override async Task RespondAsync(InteractionResponse resp)
         {
