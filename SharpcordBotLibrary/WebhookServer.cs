@@ -115,9 +115,9 @@ namespace Sharpcord_bot_library
                             Interaction_create?.Invoke(interaction);
                             if (interaction.GetResponse(1000,out InteractionResponse? resp))
                             {
-                                Logger.Debug(this, "Response got, " + JObject.FromObject(resp).ToString());
+                                Logger.Debug(this, "Response got, " + JsonConvert.SerializeObject(resp,new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore}));
                                 c.Response.ContentType = "application/json";
-                                c.Response.OutputStream.Write(Encoding.UTF8.GetBytes(JObject.FromObject(resp).ToString()));
+                                c.Response.OutputStream.Write(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(resp, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })));
                                 c.Response.Close();
                             }
                             else

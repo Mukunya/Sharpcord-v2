@@ -54,5 +54,6 @@ void CurrentDomain_ProcessExit(object? sender, EventArgs e)
         item.Shutdown();
     }
     Logger.Shutdown();
-    Environment.Exit(0);
+    throw new Exception("Exit normally");
+    //Environment.Exit(-1);
 }
