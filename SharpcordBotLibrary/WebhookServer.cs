@@ -112,7 +112,7 @@ namespace Sharpcord_bot_library
                         else
                         {
                             WebhookInteraction interaction = new WebhookInteraction(JsonConvert.DeserializeObject<InteractionObject>(data));
-                            Interaction_create?.Invoke(interaction);
+                            Task.Run(() => Interaction_create?.Invoke(interaction));
                             if (interaction.GetResponse(1000,out InteractionResponse? resp))
                             {
                                 Logger.Debug(this, "Response got, " + JsonConvert.SerializeObject(resp,new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore}));
