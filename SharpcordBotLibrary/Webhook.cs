@@ -17,10 +17,10 @@ namespace Sharpcord_bot_library
         public List<Message> messages = new List<Message>();
         HttpClient dcclient;
 
-        public WebHook(ulong channel_id, HttpClient client)
+        public WebHook(ulong channel_id,string name, HttpClient client)
         {
-            Init(channel_id).Wait();
             this.dcclient=client;
+            Init(channel_id,name).Wait();
         }
         public WebHook(string url)
         {
@@ -28,9 +28,9 @@ namespace Sharpcord_bot_library
             _client.BaseAddress = new Uri(_url);
         }
         private WebHook() { }
-        private async Task Init(ulong channel_id)
+        private async Task Init(ulong channel_id,string name)
         {
-            string resp = await (await dcclient.SendAsync(new HttpRequestMessage(HttpMethod.Post, $"channels/{channel_id}/webhooks").WithContent(new StringContent("{\"name\":\"Music player\",\"type\":3}").AsJson()))).EnsureSuccessStatusCode().Content.ReadAsStringAsync();
+            string resp = await (await dcclient.SendAsync(new HttpRequestMessage(HttpMethod.Post, $"channels/{channel_id}/webhooks").WithContent(new StringContent("{\"name\":\""+name+"\",\"type\":3}").AsJson()))).EnsureSuccessStatusCode().Content.ReadAsStringAsync();
             //Console.WriteLine(resp);
             JObject respjson = JObject.Parse(resp);
             _url = respjson["url"].ToString();
