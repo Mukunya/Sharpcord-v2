@@ -48,9 +48,9 @@ namespace Sharpcord_bot_library
         {
             while (true)
             {
-                Logger.Info(this, "Connecting.");
+                Logger.Info("Connecting.");
                 string gatewayurl = JObject.Parse(client.GetAsync(Discord.DC_API + "/gateway").GetAwaiter().GetResult().EnsureSuccessStatusCode().Content.ReadAsStringAsync().GetAwaiter().GetResult())["url"].ToString() + "/?v=9&encoding=json";
-                Logger.Info(this, $"Obtained gateway, address is {gatewayurl}");
+                Logger.Info($"Obtained gateway, address is {gatewayurl}");
                 Socket = new WebSocket(gatewayurl);
 
                 Socket.MessageReceived += Socket_MessageReceived;
@@ -61,7 +61,7 @@ namespace Sharpcord_bot_library
                 connected.Reset();
                 if (Socket.State == WebSocketState.Open)
                 {
-                    Logger.Info(this, "Connected to Discord gateway");
+                    Logger.Info("Connected to Discord gateway");
                     break;
                 }
                 
@@ -75,7 +75,7 @@ namespace Sharpcord_bot_library
         }
         private void Socket_Closed(object sender, EventArgs e)
         {
-            Logger.Warning(this, "Socket closed, attemting to reconnect.");
+            Logger.Warning("Socket closed, attemting to reconnect.");
             Connect();
             //while (true)
             //{
@@ -145,7 +145,7 @@ namespace Sharpcord_bot_library
                             case "READY":
                                 session_id = msg["d"]["session_id"].ToString();
                                 reconnectcount = 0;
-                                Logger.Info(this, "Socket connection estabilished");
+                                Logger.Info("Socket connection estabilished");
                                 break;
                             case "INTERACTION_CREATE":
                                 INTERACTION_CREATE?.Invoke(this, msg["d"]);
@@ -167,7 +167,7 @@ namespace Sharpcord_bot_library
             }
             catch (Exception ex)
             {
-                Logger.Error(this, ex);
+                Logger.Error(ex);
             }
         }
 
@@ -181,7 +181,7 @@ namespace Sharpcord_bot_library
                     if (!heartbeat_ack)
                     {
                         Socket.Close(1008, "Dead connection");
-                        Logger.Warning(this, "Soket connection died, attempting to resume");
+                        Logger.Warning("Soket connection died, attempting to resume");
                         Resume();
                         return;
                     }
@@ -201,11 +201,11 @@ namespace Sharpcord_bot_library
             reconnectcount++;
             if (reconnectcount > 4)
             {
-                Logger.Warning(this, "Reconnecting max attempts reached, connecting reguralrly.");
+                Logger.Warning("Reconnecting max attempts reached, connecting reguralrly.");
                 heartbeat_seqN = null;
                 Connect();
             }
-            Logger.Info(this, "Attempting to reconnect");
+            Logger.Info("Attempting to reconnect");
             Socket.Open();
             Socket.Send(JObject.FromObject(new
             {

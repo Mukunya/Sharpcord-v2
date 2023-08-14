@@ -21,10 +21,10 @@ namespace Sharpcord_bot_library
         }
         public override async Task RespondAsync(InteractionResponse resp)
         {
-            Logger.Debug(this, token);
-            Logger.Debug(this, application_id.ToString());
-            Logger.Debug(this, id.ToString());
-            Logger.Debug(this, JObject.FromObject(Data).ToString());
+            Logger.Debug(token);
+            Logger.Debug(application_id.ToString());
+            Logger.Debug(id.ToString());
+            Logger.Debug(JObject.FromObject(Data).ToString());
             (await client.PostAsync($"interactions/{id}/{token}/callback", new StringContent(JsonConvert.SerializeObject(resp, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })).AsJson())).EnsureSuccessStatusCode();
         }
     }

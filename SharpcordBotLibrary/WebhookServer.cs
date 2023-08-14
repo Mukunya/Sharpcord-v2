@@ -26,25 +26,25 @@ namespace Sharpcord_bot_library
         public static void Setup()
         {
             string port = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "/config.txt");
-            Logger.Info(null, "Webhook initializing. Port is " + port);
+            Logger.Info("Webhook initializing. Port is " + port);
             Listener = new HttpListener();
             Listener.Prefixes.Add("http://*:"+port + "/");
             Listener.Start();
-            Logger.Info(null, "Webhook open and listening.");
+            Logger.Info("Webhook open and listening.");
             listenerAsync = Listener.BeginGetContext((_) => { Request(); }, null);
             //Request();
         }
         private static void Request()
         {
-            Logger.Debug(null, "================================================================");
-            Logger.Debug(null, "");
-            Logger.Debug(null, "================================================================");
+            Logger.Debug("================================================================");
+            Logger.Debug("");
+            Logger.Debug("================================================================");
             HttpListenerContext context = Listener.EndGetContext(listenerAsync);
             listenerAsync = Listener.BeginGetContext((_) => { Request(); }, null);
             
             if (context.Request.Headers["CF-RAY"] == null)
             {
-                Logger.Warning(null, "Direct IP request received. Denying. RawUrl: " + context.Request.RawUrl);
+                Logger.Warning("Direct IP request received. Denying. RawUrl: " + context.Request.RawUrl);
                 context.Response.StatusCode = 403;
                 context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("403 - Forbidden"));
                 context.Response.Close();
@@ -53,20 +53,20 @@ namespace Sharpcord_bot_library
             
             if (Webhooks.ContainsKey(context.Request.RawUrl.Split('?')[0]) && context.Request.Headers["User-Agent"] == "Discord-Interactions/1.0 (+https://discord.com)")
             {
-                Logger.Info(null, "Cloudflare request received. RawUrl: " + context.Request.RawUrl);
+                Logger.Info("Cloudflare request received. RawUrl: " + context.Request.RawUrl);
                 Webhooks[context.Request.RawUrl].Interaction_request(context);
             }
             else if (Webhooks.ContainsKey(context.Request.RawUrl.Split('?')[0]))
             {
                 if (Webhooks[context.Request.RawUrl.Split('?')[0]].nondiscord)
                 {
-                    Logger.Info(null, "Cloudflare request received. RawUrl: " + context.Request.RawUrl.Split('?')[0]);
+                    Logger.Info("Cloudflare request received. RawUrl: " + context.Request.RawUrl.Split('?')[0]);
                     Webhooks[context.Request.RawUrl.Split('?')[0]].Interaction_request(context);
                 }
             }
             else
             {
-                Logger.Warning(null, "Cloudflare request received. Denying. RawUrl: " + context.Request.RawUrl.Split('?')[0]);
+                Logger.Warning("Cloudflare request received. Denying. RawUrl: " + context.Request.RawUrl.Split('?')[0]);
                 context.Response.StatusCode = 404;
                 context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Not found."));
                 context.Response.Close();
@@ -76,22 +76,22 @@ namespace Sharpcord_bot_library
         {
             if (nondiscord)
             {
-                Logger.Debug(this, "Non Discord request received.");
+                Logger.Debug("Non Discord request received.");
                 NonDiscordRequest?.Invoke(c);
             }
             else
             {
                 try
                 {
-                    Logger.Debug(this, "Discord request received.");
+                    Logger.Debug("Discord request received.");
                     string data = new StreamReader(c.Request.InputStream, Encoding.UTF8).ReadToEnd();
-                    Logger.Debug(this, data);
-                    Logger.Debug(this, c.Request.Headers.ToString());
+                    Logger.Debug(data);
+                    Logger.Debug(c.Request.Headers.ToString());
                     bool b = SignatureAlgorithm.Ed25519.Verify(BotKey, Encoding.UTF8.GetBytes(c.Request.Headers.Get("X-Signature-Timestamp") + data), StringToByteArrayFastest(c.Request.Headers.Get("X-Signature-Ed25519")?? "00"));
-                    Logger.Debug(this, "Signature verification: "+ b.ToString());
+                    Logger.Debug("Signature verification: "+ b.ToString());
                     if (!b)
                     {
-                        Logger.Debug(this, "Response:  401; Wrong signature");
+                        Logger.Debug("Response:  401; Wrong signature");
                         c.Response.StatusCode = 401;
                         c.Response.ContentType = "application/json";
                         c.Response.OutputStream.Write(Encoding.UTF8.GetBytes("{\"error\":\"Bad network signature\"}"));
@@ -99,12 +99,12 @@ namespace Sharpcord_bot_library
                     }
                     else
                     {
-                        Logger.Debug(this, "Response:  200");
+                        Logger.Debug("Response:  200");
                         c.Response.StatusCode = 200;
 
                         if (JObject.Parse(data)["type"].ToString() == "1")
                         {
-                            Logger.Debug(this, "Returned: {\"type\":1}");
+                            Logger.Debug("Returned: {\"type\":1}");
                             c.Response.ContentType = "application/json";
                             c.Response.OutputStream.Write(Encoding.UTF8.GetBytes("{\"type\":1}"));
                             c.Response.Close();
@@ -115,14 +115,14 @@ namespace Sharpcord_bot_library
                             Task.Run(() => Interaction_create?.Invoke(interaction));
                             if (interaction.GetResponse(1000,out InteractionResponse? resp))
                             {
-                                Logger.Debug(this, "Response got, " + JsonConvert.SerializeObject(resp,new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore}));
+                                Logger.Debug("Response got, " + JsonConvert.SerializeObject(resp,new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore}));
                                 c.Response.ContentType = "application/json";
                                 c.Response.OutputStream.Write(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(resp, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })));
                                 c.Response.Close();
                             }
                             else
                             {
-                                Logger.Warning(this, "Response wait timed out, droppping interaction");
+                                Logger.Warning("Response wait timed out, droppping interaction");
                                 c.Response.Abort();
                             }
                         }
@@ -130,7 +130,7 @@ namespace Sharpcord_bot_library
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(this, e);
+                    Logger.Error(e);
                 }
             }
         }

@@ -25,7 +25,7 @@ namespace Sharpcord_bot_library
         {
             gateway = new GatewayConnection(GetBotToken());
             gateway.INTERACTION_CREATE += INTERACTION_CREATE;
-            Logger.Info(this, "Gateway bot initialization complete.");
+            Logger.Info("Gateway bot initialization complete.");
             gateway.Connect();
         }
         private void INTERACTION_CREATE(object? sender, JToken e)
