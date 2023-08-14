@@ -9,7 +9,7 @@ namespace ExampleBot
 {
     //This is required for the host to launch your bot.
     [DiscordBot("Example bot", DiscordBotAttribute.BotType.webhook)]
-    //This attribute specifies the name of the logging context. (Log lines will appear as "[Timestamp] [Example] This is a log message")
+    //This attribute specifies the name of the logging context. (Log lines will appear as "[Timestamp] [Deferred example] This is a log message")
     [LogContext("Deferred example")]
     public class ExampleBot : WebhookBot
     {
