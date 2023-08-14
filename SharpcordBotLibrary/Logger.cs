@@ -11,21 +11,21 @@ namespace Sharpcord_bot_library
 {
     public static class Logger
     {
-        public static void Init(bool debug = false)
+        public static void Init(bool debug = false, LoggerConfiguration cfg = null!)
         {
-            LoggerConfiguration cfg =
+            LoggerConfiguration cfg2 =
             new LoggerConfiguration()
             .WriteTo.Console()
             .WriteTo.File(AppDomain.CurrentDomain.BaseDirectory + "/logs/log-" + DateTime.Now.ToString("yyyy_MM_dd") + ".txt");
             if (debug)
             {
-                cfg.MinimumLevel.Debug();
+                cfg2.MinimumLevel.Debug();
             }
             else
             {
-                cfg.MinimumLevel.Information();
+                cfg2.MinimumLevel.Information();
             }
-            Log.Logger = cfg.CreateLogger();
+            Log.Logger = (cfg??cfg2).CreateLogger();
             Log.Information($"ENVIRONMENT: {Environment.OSVersion.VersionString}, {Environment.ProcessorCount} core CPU, {Environment.MachineName}; Running as {Environment.UserName}.");
             Log.Debug("Debug messages enabled.");
             if (Environment.UserName == "root")
@@ -163,7 +163,7 @@ namespace Sharpcord_bot_library
         [Obsolete]
         public static void Error(object? source, Exception ex)
         {
-            Error(source, "Exception occured" + ex.ToString());
+            Error(source, "Exception occured: " + ex.ToString());
         }
         public static void Error(string message,Exception ex)
         {
@@ -171,7 +171,7 @@ namespace Sharpcord_bot_library
         }
         public static void Error(Exception ex)
         {
-            error("Exception occured" + ex);
+            error("Exception occured: " + ex);
         }
     }
 
