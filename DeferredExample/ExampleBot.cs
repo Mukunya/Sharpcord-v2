@@ -19,7 +19,7 @@ namespace ExampleBot
 
             // /test is the endpoint for this bot. Enter https://your.domain/test as the interactions endpoint url. The webhook server will listen on the port specified in the config.txt
             InitBot("/test", "<Your public key>");
-            Logger.Info(this, "Bot started successfully");
+            Logger.Info("Bot started successfully");
         }
 
         public override string GetBotToken()
@@ -56,7 +56,7 @@ namespace ExampleBot
                                     type = InteractionResponse.InteractionCallbackType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
                                     data = new MessageResponse() { }
                                 });
-                                Logger.Info(this, "Ping command invoked");
+                                Logger.Info("Ping command invoked");
                                 //Do some work
                                 await Task.Delay(5000);
 
@@ -75,7 +75,7 @@ namespace ExampleBot
                                         }
                                     }
                                 );
-                                Logger.Info(this, "Sent final response to command");
+                                Logger.Info("Sent final response to command");
                                 break;
                             default:
                                 break;
@@ -91,7 +91,7 @@ namespace ExampleBot
             }
             catch (Exception e)
             {
-                Logger.Error(this, e);
+                Logger.Error(e);
             }
         }
 

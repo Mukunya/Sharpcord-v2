@@ -19,7 +19,7 @@ namespace ExampleBot
 
             // /test is the endpoint for this bot. Enter https://your.domain/test as the interactions endpoint url. The webhook server will listen on the port specified in the config.txt
             InitBot("/test", "<Your public key>");
-            Logger.Info(this, "Bot started successfully");
+            Logger.Info("Bot started successfully");
         }
 
         public override string GetBotToken()
@@ -63,7 +63,7 @@ namespace ExampleBot
                                     }
                                     }
                                 });
-                                Logger.Info(this, "Ping command invoked");
+                                Logger.Info("Ping command invoked");
                                 break;
                             default:
                                 break;
@@ -79,7 +79,7 @@ namespace ExampleBot
             }
             catch (Exception e)
             {
-                Logger.Error(this, e);
+                Logger.Error(e);
             }
             
         }
