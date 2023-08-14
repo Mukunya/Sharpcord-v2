@@ -17,7 +17,7 @@ namespace ExampleBot
         {
             //You have add this to your constructor
             InitBot();
-            Logger.Info(this, "Bot started successfully");
+            Logger.Info("Bot started successfully");
         }
 
         public override string GetBotToken()
@@ -61,7 +61,7 @@ namespace ExampleBot
                                     }
                                     }
                                 });
-                                Logger.Info(this, "Ping command invoked");
+                                Logger.Info("Ping command invoked");
                                 break;
                             default:
                                 break;
@@ -77,7 +77,7 @@ namespace ExampleBot
             }
             catch (Exception e)
             {
-                Logger.Error(this, e);
+                Logger.Error(e);
             }
             
         }
