@@ -174,21 +174,4 @@ namespace Sharpcord_bot_library
             error("Exception occured: " + ex);
         }
     }
-
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Struct|AttributeTargets.Interface, Inherited = false, AllowMultiple = false)]
-    public sealed class LogContextAttribute : Attribute
-    {
-        readonly string context;
-
-        public LogContextAttribute(string context)
-        {
-            this.context = context;
-        }
-
-        public string Context
-        {
-            get { return context; }
-        }
-
-    }
 }

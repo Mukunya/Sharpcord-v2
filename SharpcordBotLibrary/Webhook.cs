@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sharpcord_bot_library
 {
+    [LogContext("Webhook")]
     public class WebHook : IDisposable
     {
         public string _url;
@@ -69,7 +70,7 @@ namespace Sharpcord_bot_library
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Logger.Error(e);
             }
         }
         public async Task DeleteMessage(Message msg)
@@ -78,9 +79,16 @@ namespace Sharpcord_bot_library
             {
                 (await _client.DeleteAsync(_url+"/messages/"+msg.id)).EnsureSuccessStatusCode();
             }
+            catch (HttpRequestException e)
+            {
+                if (e.StatusCode != System.Net.HttpStatusCode.NotFound)
+                {
+                    Logger.Error(e);
+                }
+            }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Logger.Error(e);
             }
             finally
             {
@@ -97,12 +105,23 @@ namespace Sharpcord_bot_library
             {
                 (await _client.DeleteAsync(_url)).EnsureSuccessStatusCode();
             }
+            catch(HttpRequestException e)
+            {
+                if (e.StatusCode != System.Net.HttpStatusCode.NotFound)
+                {
+                    Logger.Error(e);
+                }
+            }
             catch (Exception e)
             {
-                await Console.Out.WriteLineAsync(e.ToString());
+                Logger.Error(e);
+            }
+            finally 
+            {
+                _client.Dispose();
             }
 
-            _client.Dispose();
+
         }
     }
 }

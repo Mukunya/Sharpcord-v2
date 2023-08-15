@@ -5,8 +5,7 @@ using WebSocket4Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-
-//Nullreference exceptions shouldn't occurr. C# warnings ignorable.
+using Newtonsoft.Json.Bson;
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
@@ -28,7 +27,7 @@ namespace Sharpcord_bot_library
         public event EventHandler<JToken> INTERACTION_CREATE;
         public event EventHandler<JObject> VOICE_STATE_UPDATE;
         public event EventHandler<JObject> VOICE_SERVER_UPDATE;
-        public event EventHandler<JObject> OTHER;
+        public event EventHandler<JObject> OTHEREVENT;
 
         HttpClient client;
 
@@ -77,32 +76,54 @@ namespace Sharpcord_bot_library
         {
             Logger.Warning("Socket closed, attemting to reconnect.");
             Connect();
-            //while (true)
-            //{
-
-            //    try
-            //    {
-            //        Thread.Sleep(1000);
-            //        Resume();
-            //        break;
-            //    }
-            //    catch
-            //    {
-            //        Thread.Sleep(10000);
-            //    }
-            //}
         }
     
+        private void Gateway_Hello(JObject msg)
+        {
+            heartbeat_interval = msg["d"]["heartbeat_interval"].ToObject<int>();
+            Gateway_Hearthbeat();
+            Socket.Send(JObject.FromObject(new
+            {
+                op = 2,
+                d = new
+                {
+                    token = token,
+                    intents = 1 << 4,
+                    properties = JObject.Parse("{\"os\": \""+Environment.OSVersion.VersionString+"\",\"browser\": \".net 6.0\",\"device\": \"Sharpcord\"}")
+                }
+            }
+            ).ToString());
+        }
+        private void Gateway_Event(JObject msg)
+        {
+            switch (msg["t"].ToString())
+            {
+                case "READY":
+                    session_id = msg["d"]["session_id"].ToString();
+                    reconnectcount = 0;
+                    Logger.Info("Socket connection estabilished");
+                    break;
+                case "INTERACTION_CREATE":
+                    INTERACTION_CREATE?.Invoke(this, msg["d"]);
+                    break;
+                case "VOICE_SERVER_UPDATE":
+                    VOICE_SERVER_UPDATE?.Invoke(this, msg);
+                    break;
+                case "VOICE_STATE_UPDATE":
+                    VOICE_STATE_UPDATE?.Invoke(this, msg);
+                    break;
+                default:
+                    OTHEREVENT?.Invoke(this, msg);
+                    break;
+            }
+        }
         private void Socket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
             try
             {
-                //Logger.Debug(this, e.Message);
-                //Console.WriteLine(e.Message);
                 JObject msg = JObject.Parse(e.Message);
                 if (msg.ContainsKey("s"))
                 {
-
                     int? i = msg["s"].ToObject<int?>();
                     if (i.HasValue)
                     {
@@ -112,20 +133,7 @@ namespace Sharpcord_bot_library
                 switch (msg["op"].ToObject<int>())
                 {
                     case 10: //Gateway hello
-                        heartbeat_interval = msg["d"]["heartbeat_interval"].ToObject<int>();
-                        Gateway_Hearthbeat();
-                        Socket.Send(JObject.FromObject(new
-                        {
-                            op = 2,
-                            d = new
-                            {
-                                token = token,
-                                intents = 1 << 4,
-                                properties = JObject.Parse("{\"$os\": \""+Environment.OSVersion.VersionString+"\",\"$browser\": \".net 6.0\",\"$device\": \"Chinese server\"}")
-                            }
-                        }
-                        ).ToString());
-
+                        Gateway_Hello(msg);
                         break;
                     case 11: //Heartbeat ACK
                         heartbeat_ack = true;
@@ -140,26 +148,7 @@ namespace Sharpcord_bot_library
                         ).ToString());
                         break;
                     case 0: //Gateway event
-                        switch (msg["t"].ToString())
-                        {
-                            case "READY":
-                                session_id = msg["d"]["session_id"].ToString();
-                                reconnectcount = 0;
-                                Logger.Info("Socket connection estabilished");
-                                break;
-                            case "INTERACTION_CREATE":
-                                INTERACTION_CREATE?.Invoke(this, msg["d"]);
-                                break;
-                            case "VOICE_SERVER_UPDATE":
-                                VOICE_SERVER_UPDATE?.Invoke(this, msg);
-                                break;
-                            case "VOICE_STATE_UPDATE":
-                                VOICE_STATE_UPDATE?.Invoke(this, msg);
-                                break;
-                            default:
-                                OTHER?.Invoke(this, msg);
-                                break;
-                        }
+                        Gateway_Event(msg);
                         break;
                     default:
                         break;
